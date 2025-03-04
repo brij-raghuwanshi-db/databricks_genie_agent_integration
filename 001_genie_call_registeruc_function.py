@@ -16,7 +16,7 @@
 # MAGIC
 # MAGIC     @dataclass
 # MAGIC     class DatabricksGenieTool():
-# MAGIC         databricks_host: str = "https://e2-demo-field-eng.cloud.databricks.com"
+# MAGIC         databricks_host: str = "https://YourCloudWorkspace.cloud.databricks.com"
 # MAGIC         api_token: str = dbutils.secrets.get('brij_scope', 'brij_key')
 # MAGIC         headers = {
 # MAGIC         "Authorization": f"Bearer {api_token}",
@@ -79,3 +79,59 @@
 
 # MAGIC %sql
 # MAGIC select brij_catalog.genie_agent_integration._genie_query("How has the market sentiment changed by week for my portfolio?") as col
+
+# COMMAND ----------
+
+# MAGIC %pip install databricks-sdk
+# MAGIC %restart_python
+
+# COMMAND ----------
+
+from databricks.sdk import WorkspaceClient
+
+w = WorkspaceClient(host  = f"https://YourCloudWorkspace.cloud.databricks.com",
+                    token = 'test')
+w.get_workspace_id()
+
+# COMMAND ----------
+
+w = WorkspaceClient()
+
+# COMMAND ----------
+
+w.tokens.list()
+
+# COMMAND ----------
+
+env:
+  - name: "DATABRICKS_SECRETS"
+    valueFrom: "dbrx_secret"
+  - name: "DATABRICKS_HOST"
+    value: "https://YourCloudWorkspace.cloud.databricks.com"
+  - name: STREAMLIT_BROWSER_GATHER_USAGE_STATS
+    value: "false"
+
+# COMMAND ----------
+
+w.current_user.me()
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from brij_catalog.sce.sce_pdf_vsi_02 limit 5 -- Check if this table supports Lakehouse Federation
+
+# COMMAND ----------
+
+input_string = "D.20-10-005"
+cleaned_string = input_string.replace('.', '').replace('-', '')
+cleaned_string
+
+# COMMAND ----------
+
+"File Name: D.20-10-005 D2010005".split(" ")[2]
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from brij_catalog.sce.sce_pdf_vsi_02
+# MAGIC -- SHOW TABLES IN brij_catalog.sce

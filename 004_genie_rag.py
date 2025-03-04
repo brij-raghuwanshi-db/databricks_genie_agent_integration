@@ -96,7 +96,7 @@ input_example = model_config.get("input_example")
 # MAGIC
 # MAGIC     name: str = "Databricks Genie Tool"
 # MAGIC     description: str = "A tool to interact with Databricks Genie API."
-# MAGIC     databricks_host: str = "https://e2-demo-field-eng.cloud.databricks.com"
+# MAGIC     databricks_host: str = "https://YourCloudWorkspace.cloud.databricks.com"
 # MAGIC     api_token: str = dbutils.secrets.get('brij_scope', 'brij_key')
 # MAGIC     headers: Dict[str, str] = {"Authorization": f"Bearer {api_token}", "Content-Type": "application/json"}
 # MAGIC     base_url: str = f"{databricks_host}/api/2.0/genie/spaces"
@@ -239,6 +239,21 @@ input_example = model_config.get("input_example")
 # MAGIC )
 # MAGIC
 # MAGIC mlflow.models.set_model(model=chain)
+
+# COMMAND ----------
+
+chain = (
+    {
+        "question": itemgetter("messages") | RunnableLambda(extract_user_query_string),
+        "chat_history": itemgetter("messages") | RunnableLambda(extract_chat_history),
+    }
+    | RunnablePassthrough()
+    | {"question": itemgetter("question")}
+    | {RunnableLambda(query_as_vector), "question": itemgetter("question")}
+    | prompt
+    | model
+    | StrOutputParser()
+) 
 
 # COMMAND ----------
 

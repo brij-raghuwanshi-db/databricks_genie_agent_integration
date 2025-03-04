@@ -16,7 +16,7 @@ class DatabricksGenieTool(BaseTool):
 
     name: str = "Databricks Genie Tool"
     description: str = "A tool to interact with Databricks Genie API."
-    databricks_host: str = "https://e2-demo-field-eng.cloud.databricks.com"
+    databricks_host: str = "https://YourCloudWorkspace.cloud.databricks.com"
     api_token: str = dbutils.secrets.get('brij_scope', 'brij_key')
     headers: Dict[str, str] = {"Authorization": f"Bearer {api_token}", "Content-Type": "application/json"}
     base_url: str = f"{databricks_host}/api/2.0/genie/spaces"
